@@ -372,6 +372,64 @@ Modals
   box-shadow: var(--shadow);
 }
 
+.modal-backdrop--guide {
+  z-index: 35;
+  background:
+    radial-gradient(circle at top, rgba(255, 122, 89, 0.16), transparent 28%),
+    rgba(2, 8, 15, 0.78);
+}
+
+.modal-card--guide {
+  width: min(680px, 100%);
+  overflow: hidden;
+  background:
+    radial-gradient(circle at top right, rgba(255, 122, 89, 0.18), transparent 26%),
+    linear-gradient(180deg, rgba(20, 36, 57, 0.98), rgba(10, 20, 31, 0.98));
+}
+
+.guide-steps {
+  display: grid;
+  gap: 12px;
+  margin-top: 22px;
+}
+
+.guide-step {
+  display: grid;
+  grid-template-columns: 52px 1fr;
+  gap: 14px;
+  align-items: start;
+  padding: 14px;
+  border-radius: 18px;
+  background: rgba(124, 154, 186, 0.08);
+  border: 1px solid rgba(163, 194, 228, 0.14);
+}
+
+.guide-step__number {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(255, 122, 89, 0.2), rgba(82, 217, 165, 0.16));
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #ffd8cd;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.guide-step h3 {
+  margin: 0 0 6px;
+  font-size: 1rem;
+}
+
+.guide-step p {
+  margin: 0;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
 .modal-actions {
   display: grid;
   gap: 12px;
@@ -524,5 +582,15 @@ input {
     width: 72px;
     height: 92px;
     border-radius: 14px;
+  }
+}
+
+@media (max-width: 560px) {
+  .modal-card--guide {
+    padding: 22px;
+  }
+
+  .guide-step {
+    grid-template-columns: 1fr;
   }
 }

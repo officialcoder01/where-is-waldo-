@@ -2,6 +2,8 @@ import { API_BASE_URL, getLevels, startLevel } from '../api/api.js';
 import { createLevelCard } from '../components/levelCard.js';
 import { getState, hydrateGameSession, resetGameState, setState, syncLevels } from '../state/gameState.js';
 
+const HOME_GUIDE_STORAGE_KEY = 'where-is-waldo-home-guide-dismissed';
+
 function buildPreviewSources(path) {
   const localUrl = new URL(path, window.location.href).toString();
   const remoteUrl = `${API_BASE_URL}${path.startsWith('/') ? '' : '/'}${path}`;
@@ -54,12 +56,63 @@ function renderHomeShell(app) {
         <div class="level-grid" data-level-grid></div>
         <p class="page-error" data-home-error hidden></p>
       </section>
+      <div class="modal-backdrop modal-backdrop--guide" data-home-guide hidden>
+        <div class="modal-card modal-card--guide">
+          <p class="section-heading__eyebrow">Field Briefing</p>
+          <h2>How to spot everyone without losing the clock.</h2>
+          <p class="section-heading__copy">
+            Before you dive into the crowd, here is the quick survival guide for sharp-eyed detectives.
+          </p>
+          <div class="guide-steps">
+            <article class="guide-step">
+              <span class="guide-step__number">01</span>
+              <div>
+                <h3>Pick a level and lock in</h3>
+                <p>Choose any scene from the home page. Your timer starts as soon as the round opens.</p>
+              </div>
+            </article>
+            <article class="guide-step">
+              <span class="guide-step__number">02</span>
+              <div>
+                <h3>Tap the scene where you spotted someone</h3>
+                <p>A target marker appears exactly where you clicked so you can confirm the guess.</p>
+              </div>
+            </article>
+            <article class="guide-step">
+              <span class="guide-step__number">03</span>
+              <div>
+                <h3>Choose the correct character</h3>
+                <p>Use the pop-up selector to name who you found. Correct picks stay marked on the map.</p>
+              </div>
+            </article>
+            <article class="guide-step">
+              <span class="guide-step__number">04</span>
+              <div>
+                <h3>Zoom, scan, and finish clean</h3>
+                <p>Pinch your focus with zoom controls, sweep the full image, then submit your fastest time to the leaderboard.</p>
+              </div>
+            </article>
+          </div>
+          <div class="modal-actions">
+            <button type="button" class="primary-button" data-guide-dismiss>Start The Hunt</button>
+          </div>
+        </div>
+      </div>
     </main>
   `;
 }
 
 function renderHomeLoading(state, loadingOverlay) {
   loadingOverlay.hidden = !state.ui.loading;
+}
+
+function shouldShowHomeGuide() {
+  return window.localStorage.getItem(HOME_GUIDE_STORAGE_KEY) !== 'true';
+}
+
+function dismissHomeGuide(guideModal) {
+  window.localStorage.setItem(HOME_GUIDE_STORAGE_KEY, 'true');
+  guideModal.hidden = true;
 }
 
 export async function initHomePage() {
@@ -70,6 +123,13 @@ export async function initHomePage() {
   const grid = app.querySelector('[data-level-grid]');
   const errorElement = app.querySelector('[data-home-error]');
   const loadingOverlay = app.querySelector('[data-loading-overlay]');
+  const guideModal = app.querySelector('[data-home-guide]');
+  const guideDismissButton = app.querySelector('[data-guide-dismiss]');
+
+  guideModal.hidden = !shouldShowHomeGuide();
+  guideDismissButton.addEventListener('click', () => {
+    dismissHomeGuide(guideModal);
+  });
 
   resetGameState();
   // Make sure UI reflects the loading state while fetching levels.
