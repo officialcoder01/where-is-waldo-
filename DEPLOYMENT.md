@@ -35,7 +35,8 @@ You can add this in the Vercel dashboard or in `frontend/vercel.json` after you 
 Set these in the backend Vercel project:
 
 ```env
-DATABASE_URL=your_postgres_connection_string
+DATABASE_URL=your_direct_postgres_connection_string_for_prisma_cli
+POOLED_DATABASE_URL=your_pooled_runtime_connection_string
 SECRET=your_session_secret
 NODE_ENV=production
 FRONTEND_ORIGIN=https://YOUR-FRONTEND-PROJECT.vercel.app
@@ -47,6 +48,11 @@ Make sure the backend deployment runs Prisma against production:
 
 1. Generate the client during build
 2. Run `prisma migrate deploy` against the production database
+
+If you are using Supabase:
+
+- use the direct connection string for `DATABASE_URL` so `prisma migrate deploy` can complete during the Vercel build
+- use the pooled connection string for `POOLED_DATABASE_URL` so the deployed serverless app can connect efficiently at runtime
 
 If you use a hosted Postgres provider such as Neon, Supabase, or Vercel Postgres, point `DATABASE_URL` there.
 
