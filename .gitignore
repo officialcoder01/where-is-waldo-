@@ -3,3 +3,4 @@ node_modules
 dist
 .vscode
 models
+postgresql://postgres.pawgvwyiickmxikbggwv:9H4Ul9ylUrSPURbM@aws-0-eu-west-1.pooler.supabase.com:6543/postgres
