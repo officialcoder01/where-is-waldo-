@@ -12,10 +12,14 @@ require('dotenv').config({ path: path.resolve(__dirname, '..', '.env') });
 const app = express();
 // Detect whether the server is running in its deployed configuration.
 const isProduction = process.env.NODE_ENV === 'production';
+function sanitizeOriginValue(origin) {
+    return origin.trim().replace(/^['"]+|['"]+$/g, '');
+}
+
 // Allow one or more frontend origins to be supplied from the environment.
 const configuredOrigins = (process.env.FRONTEND_ORIGIN ?? '')
     .split(',')
-    .map((origin) => origin.trim())
+    .map((origin) => sanitizeOriginValue(origin))
     .filter(Boolean);
 // Include configured production origins plus the local dev URLs we commonly use.
 const allowedOrigins = [
@@ -34,10 +38,12 @@ function normalizeOrigin(origin) {
         return null;
     }
 
+    const cleanedOrigin = sanitizeOriginValue(origin);
+
     try {
-        return new URL(origin).origin;
+        return new URL(cleanedOrigin).origin;
     } catch {
-        return origin.replace(/\/+$/, '');
+        return cleanedOrigin.replace(/\/+$/, '');
     }
 }
 
@@ -88,6 +94,11 @@ app.use(cors({
             return;
         }
 
+        console.error('Blocked by CORS:', {
+            requestOrigin: origin,
+            normalizedRequestOrigin: normalizeOrigin(origin),
+            allowedOrigins: allowedOrigins.map((allowedOrigin) => normalizeOrigin(allowedOrigin)),
+        });
         callback(new Error('Origin not allowed by CORS'));
     },
     credentials: true,
