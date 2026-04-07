@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://YOUR-BACKEND-PROJECT.vercel.app/:path*"
+      "destination": "https://where-is-waldo-backend.vercel.app/:path*"
     }
   ]
 }
