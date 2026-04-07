@@ -6,7 +6,7 @@ const {
 } = require('../services/sessionExpiryService');
 
 // Keep the session lifetime in one place so controller behavior stays consistent.
-const SESSION_DURATION_MS = 1 * 60 * 1000;
+const SESSION_DURATION_MS = 30 * 60 * 1000;
 
 function buildLevelQuery() {
   // Only expose the public character data the client needs to render the UI.
