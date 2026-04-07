@@ -3,10 +3,11 @@
   "version": "1.0.0",
   "main": "src/app.js",
   "scripts": {
-    "build": "prisma generate --schema=./prisma/schema.prisma",
+    "build": "prisma generate --schema=./src/prisma/schema.prisma",
+    "migrate:deploy": "prisma migrate deploy --schema=./src/prisma/schema.prisma",
     "test": "jest",
     "dev": "node --watch src/app.js",
-    "postinstall": "prisma generate",
+    "postinstall": "prisma generate --schema=./src/prisma/schema.prisma",
     "start": "node src/app.js"
   },
   "keywords": [],
