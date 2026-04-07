@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Debug Image координаты</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 24px;
+        font-family: Arial, sans-serif;
+        background: #0a0f16;
+        color: #e6edf5;
+      }
+      #debug-image {
+        max-width: 100%;
+        height: auto;
+        display: block;
+        border: 2px solid #273549;
+        border-radius: 12px;
+        cursor: crosshair;
+      }
+      #output {
+        margin-top: 12px;
+        font-size: 14px;
+        color: #9fb1c7;
+      }
+    </style>
+  </head>
+  <body>
+    <img id="debug-image" src="./assets/level2/map2.png" alt="Level 2 map" />
+    <div id="output">Click on the image to log coordinates.</div>
+
+    <script>
+      const img = document.getElementById("debug-image");
+      const output = document.getElementById("output");
+
+      img.addEventListener("click", (event) => {
+        const rect = img.getBoundingClientRect();
+        const x = event.clientX - rect.left;
+        const y = event.clientY - rect.top;
+
+        const percentX = (x / rect.width) * 100;
+        const percentY = (y / rect.height) * 100;
+
+        const msg = `Click: ${percentX.toFixed(2)}%, ${percentY.toFixed(2)}%`;
+        output.textContent = msg;
+        console.log(msg);
+      });
+    </script>
+  </body>
+</html>

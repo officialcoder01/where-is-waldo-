@@ -1,0 +1,134 @@
+/*
+Grid
+Flex layouts
+Page containers
+*/
+
+.page {
+  width: min(1180px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 40px 0 56px;
+}
+
+.page--game {
+  width: min(1320px, calc(100% - 28px));
+}
+
+.hero-panel,
+.page-panel {
+  position: relative;
+  overflow: hidden;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(18px);
+}
+
+.hero-panel {
+  padding: 40px;
+  margin-bottom: 28px;
+}
+
+.hero-panel--compact {
+  padding-bottom: 28px;
+}
+
+.hero-panel__eyebrow,
+.section-heading__eyebrow {
+  margin: 0 0 12px;
+  color: #ffd8cd;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.hero-panel h1,
+.section-heading h2 {
+  margin: 0;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  line-height: 1.04;
+}
+
+.section-heading h2 {
+  font-size: clamp(1.35rem, 3vw, 2rem);
+}
+
+.hero-panel__copy,
+.section-heading__copy {
+  max-width: 640px;
+  margin: 14px 0 0;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+.page-panel {
+  padding: 30px;
+}
+
+.section-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 24px;
+}
+
+.section-heading--compact {
+  align-items: start;
+}
+
+.level-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.game-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 24px;
+}
+
+.game-stage,
+.game-sidebar {
+  min-width: 0;
+}
+
+.game-sidebar {
+  display: flex;
+  flex-direction: column;
+}
+
+.character-list {
+  display: grid;
+  gap: 14px;
+}
+
+@media (max-width: 980px) {
+  .level-grid,
+  .game-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .page {
+    width: min(100% - 20px, 1180px);
+    padding-top: 20px;
+    padding-bottom: 28px;
+  }
+
+  .hero-panel,
+  .page-panel {
+    padding: 22px;
+    border-radius: 22px;
+  }
+
+  .section-heading {
+    flex-direction: column;
+    align-items: start;
+  }
+}

@@ -1,0 +1,77 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Level {
+  id           String        @id @default(uuid())
+  name         String
+  imageUrl     String
+  characters   Character[]
+  gameSessions GameSession[]
+  createdAt    DateTime      @default(now())
+}
+
+model Character {
+  id              String           @id @default(uuid())
+  name            String
+  xCoord          Float
+  yCoord          Float
+  radius          Float
+  levelId         String
+  level           Level            @relation(fields: [levelId], references: [id])
+  foundInSessions FoundCharacter[]
+}
+
+model GameSession {
+  id               String            @id @default(uuid())
+  levelId          String
+  level            Level             @relation(fields: [levelId], references: [id])
+  status           SessionStatus           @default(ACTIVE)
+  foundChars       FoundCharacter[]
+  leaderboardEntry LeaderboardEntry?
+  startedAt        DateTime          @default(now())
+  endedAt          DateTime?
+  expiredAt        DateTime
+}
+
+model FoundCharacter {
+  id          String @id @default(uuid())
+  sessionId   String
+  characterId String
+
+  session   GameSession @relation(fields: [sessionId], references: [id])
+  character Character   @relation(fields: [characterId], references: [id])
+
+  @@unique([sessionId, characterId])
+}
+
+model LeaderboardEntry {
+  id        String      @id @default(uuid())
+  name      String
+  timeInMs  Int
+  session   GameSession @relation(fields: [sessionId], references: [id])
+  sessionId String      @unique
+  createdAt DateTime    @default(now())
+}
+
+enum SessionStatus {
+  ACTIVE
+  COMPLETED
+  EXPIRED
+}
+
+model Session {
+  id       String   @id
+  sid      String   @unique
+  data     String
+  expiresAt DateTime
+}

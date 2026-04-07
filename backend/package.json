@@ -1,0 +1,30 @@
+{
+  "name": "where_is_waldo",
+  "version": "1.0.0",
+  "main": "src/app.js",
+  "scripts": {
+    "build": "prisma generate",
+    "test": "jest",
+    "dev": "node --watch src/app.js",
+    "postinstall": "prisma generate",
+    "start": "node src/app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "jest": "^30.3.0",
+    "prisma": "^7.5.0",
+    "supertest": "^7.2.2"
+  },
+  "dependencies": {
+    "@prisma/adapter-pg": "^7.5.0",
+    "@prisma/client": "^7.5.0",
+    "@quixo3/prisma-session-store": "^3.1.19",
+    "cors": "^2.8.6",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "express-session": "^1.19.0"
+  }
+}

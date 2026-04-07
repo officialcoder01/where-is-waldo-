@@ -1,0 +1,176 @@
+/*
+Image positioning
+Marker styles
+Target box
+Timer styling
+*/
+
+.page-panel--game {
+  padding-top: 24px;
+}
+
+.stage-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 12px;
+}
+
+.zoom-controls {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 999px;
+  background: rgba(10, 22, 35, 0.82);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(10px);
+}
+
+.zoom-controls__button,
+.zoom-controls__reset {
+  min-height: 38px;
+  min-width: 38px;
+  padding: 0 12px;
+}
+
+.zoom-controls__value {
+  min-width: 56px;
+  text-align: center;
+  color: var(--text-primary);
+  font-weight: 700;
+}
+
+.stage-frame {
+  position: relative;
+  overflow: hidden;
+  border-radius: 26px;
+  border: 1px solid var(--border);
+  background: linear-gradient(180deg, rgba(12, 26, 40, 0.88), rgba(8, 18, 28, 0.96));
+  min-height: 520px;
+}
+
+.stage-viewport {
+  overflow: auto;
+  max-height: 70vh;
+  border-radius: 26px;
+  cursor: grab;
+  touch-action: none;
+}
+
+.stage-viewport.is-panning {
+  cursor: grabbing;
+  user-select: none;
+}
+
+.stage-overlay {
+  position: relative;
+  min-height: 520px;
+  width: 100%;
+  transform-origin: top left;
+}
+
+.stage-image {
+  width: 100%;
+  height: auto;
+  min-height: 520px;
+  object-fit: cover;
+  cursor: crosshair;
+  border-radius: 26px;
+}
+
+.target-box,
+.found-marker {
+  position: absolute;
+  transform: translate(-50%, -50%);
+}
+
+.target-box {
+  z-index: 7;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  border: 2px solid #ffd8cd;
+  box-shadow:
+    0 0 0 2px rgba(7, 17, 27, 0.85),
+    0 0 0 10px rgba(255, 122, 89, 0.16);
+  background: rgba(255, 122, 89, 0.12);
+}
+
+.found-marker {
+  z-index: 6;
+  display: grid;
+  place-items: center;
+}
+
+.found-marker__pulse,
+.found-marker__dot {
+  position: absolute;
+  border-radius: 999px;
+}
+
+.found-marker__pulse {
+  width: 38px;
+  height: 38px;
+  background: rgba(82, 217, 165, 0.2);
+  animation: pulse 1.7s ease-out infinite;
+}
+
+.found-marker__dot {
+  width: 14px;
+  height: 14px;
+  background: var(--success);
+  box-shadow: 0 0 0 6px rgba(82, 217, 165, 0.18);
+}
+
+.found-marker__label {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  white-space: nowrap;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(6, 16, 25, 0.88);
+  border: 1px solid rgba(82, 217, 165, 0.28);
+  color: var(--text-primary);
+  font-size: 0.78rem;
+}
+
+.is-shaking {
+  animation: shake 260ms ease-in-out 2;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translate(-50%, -50%) translateX(0); }
+  25% { transform: translate(-50%, -50%) translateX(-4px); }
+  50% { transform: translate(-50%, -50%) translateX(4px); }
+  75% { transform: translate(-50%, -50%) translateX(-3px); }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.85;
+  }
+  100% {
+    transform: scale(1.8);
+    opacity: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .stage-toolbar {
+    justify-content: stretch;
+  }
+
+  .zoom-controls {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .stage-frame,
+  .stage-overlay,
+  .stage-viewport,
+  .stage-image {
+    min-height: 340px;
+  }
+}
