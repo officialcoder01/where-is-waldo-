@@ -10,9 +10,16 @@ const cors = require('cors');
 require('dotenv').config({ path: path.resolve(__dirname, '..', '.env') });
 
 const app = express();
+// Detect whether the server is running in its deployed configuration.
 const isProduction = process.env.NODE_ENV === 'production';
+// Allow one or more frontend origins to be supplied from the environment.
+const configuredOrigins = (process.env.FRONTEND_ORIGIN ?? '')
+    .split(',')
+    .map((origin) => origin.trim())
+    .filter(Boolean);
+// Include configured production origins plus the local dev URLs we commonly use.
 const allowedOrigins = [
-    process.env.FRONTEND_ORIGIN,
+    ...configuredOrigins,
     'http://localhost:3000',
     'http://127.0.0.1:3000',
     'http://localhost:5173',
@@ -21,18 +28,39 @@ const allowedOrigins = [
     'http://127.0.0.1:5500',
 ].filter(Boolean);
 
+function normalizeOrigin(origin) {
+    // Reduce origins to a stable form so trailing slashes or full URLs do not break matching.
+    if (!origin) {
+        return null;
+    }
+
+    try {
+        return new URL(origin).origin;
+    } catch {
+        return origin.replace(/\/+$/, '');
+    }
+}
+
 function isAllowedOrigin(origin) {
+    // Accept same-origin/server-side requests and approved browser origins.
     if (!origin) {
         return true;
     }
 
-    if (allowedOrigins.includes(origin)) {
+    // Compare normalized origins so environment formatting differences do not cause false rejections.
+    const normalizedOrigin = normalizeOrigin(origin);
+    const normalizedAllowedOrigins = allowedOrigins
+        .map((allowedOrigin) => normalizeOrigin(allowedOrigin))
+        .filter(Boolean);
+
+    if (normalizedAllowedOrigins.includes(normalizedOrigin)) {
         return true;
     }
 
     if (!isProduction) {
         try {
-            const { hostname } = new URL(origin);
+            // In development, allow any localhost-style origin regardless of port.
+            const { hostname } = new URL(normalizedOrigin);
             return (
                 hostname === 'localhost' ||
                 hostname === '127.0.0.1' ||
@@ -47,12 +75,14 @@ function isAllowedOrigin(origin) {
 }
 
 if (isProduction) {
+    // Trust the reverse proxy in production so secure cookies work correctly behind Vercel.
     app.set('trust proxy', 1);
 }
 
 app.use(express.json());
 app.use(cors({
     origin(origin, callback) {
+        // Let CORS decide request-by-request whether the browser origin is allowed.
         if (isAllowedOrigin(origin)) {
             callback(null, true);
             return;
