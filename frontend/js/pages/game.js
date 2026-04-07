@@ -18,7 +18,7 @@ import {
 } from '../utils/coordinate.js';
 import { createTimer, formatDuration, getElapsedTime } from '../utils/timer.js';
 
-const MIN_ZOOM = 1;
+const MIN_ZOOM = 0.65;
 const MAX_ZOOM = 2.5;
 const ZOOM_STEP = 0.25;
 const DRAG_DISTANCE_THRESHOLD = 6;
@@ -251,6 +251,11 @@ function updateViewportDragState(viewport, isDragging) {
   viewport.classList.toggle('is-panning', isDragging);
 }
 
+function updateViewportZoomState(viewport, zoomScale) {
+  // Only disable native touch scrolling when we actually need drag-to-pan.
+  viewport.classList.toggle('is-zoomed', zoomScale > 1);
+}
+
 function createTargetSelectionHandler(levelId) {
   // Validate a dropdown selection against the backend.
   return async function handleTargetSelection(character) {
@@ -441,6 +446,7 @@ export async function initGamePage() {
   const unsubscribe = subscribe((state) => {
     renderGameState(state, elements);
     syncTimer(state);
+    updateViewportZoomState(elements.viewport, state.ui.zoomScale);
   });
 
   try {
@@ -555,7 +561,7 @@ export async function initGamePage() {
     // Drag the zoomed stage itself, but avoid hijacking clicks on interactive UI.
     if (
       event.button !== 0 ||
-      getState().ui.zoomScale <= MIN_ZOOM ||
+      getState().ui.zoomScale <= 1 ||
       event.target.closest('button, input, form, .target-dropdown')
     ) {
       return;
