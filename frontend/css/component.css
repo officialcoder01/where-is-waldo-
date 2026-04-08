@@ -604,6 +604,18 @@ input {
     padding: 18px;
   }
 
+  .modal-card--guide .modal-actions {
+    position: sticky;
+    bottom: -18px;
+    margin: 14px -18px -18px;
+    padding: 14px 18px 18px;
+    background: linear-gradient(180deg, rgba(10, 20, 31, 0), rgba(10, 20, 31, 0.98) 28%);
+  }
+
+  .modal-card--guide .primary-button {
+    min-height: 46px;
+  }
+
   .guide-step {
     grid-template-columns: 1fr;
     gap: 10px;
@@ -628,9 +640,5 @@ input {
   .modal-card--guide .section-heading__copy {
     margin-top: 10px;
     line-height: 1.5;
-  }
-
-  .modal-card--guide .modal-actions {
-    margin-top: 16px;
   }
 }
