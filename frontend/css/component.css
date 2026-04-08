@@ -355,6 +355,7 @@ Modals
   display: grid;
   place-items: center;
   padding: 20px;
+  overflow-y: auto;
   background: rgba(2, 8, 15, 0.7);
   backdrop-filter: blur(10px);
 }
@@ -365,7 +366,9 @@ Modals
 
 .modal-card {
   width: min(440px, 100%);
+  max-height: min(calc(100vh - 32px), 760px);
   padding: 28px;
+  overflow-y: auto;
   border-radius: 24px;
   background: linear-gradient(180deg, rgba(20, 36, 57, 0.98), rgba(10, 20, 31, 0.98));
   border: 1px solid var(--border);
@@ -380,7 +383,7 @@ Modals
 }
 
 .modal-card--guide {
-  width: min(680px, 100%);
+  width: min(680px, calc(100vw - 20px));
   overflow: hidden;
   background:
     radial-gradient(circle at top right, rgba(255, 122, 89, 0.18), transparent 26%),
@@ -586,11 +589,48 @@ input {
 }
 
 @media (max-width: 560px) {
+  .modal-backdrop {
+    align-items: center;
+    padding: 14px;
+  }
+
+  .modal-card {
+    max-height: min(calc(100vh - 28px), 640px);
+    border-radius: 20px;
+  }
+
   .modal-card--guide {
-    padding: 22px;
+    width: min(100%, 360px);
+    padding: 18px;
   }
 
   .guide-step {
     grid-template-columns: 1fr;
+    gap: 10px;
+    padding: 12px;
+  }
+
+  .guide-step__number {
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    font-size: 0.82rem;
+  }
+
+  .modal-card--guide h2 {
+    font-size: 1.5rem;
+  }
+
+  .guide-steps {
+    gap: 10px;
+  }
+
+  .modal-card--guide .section-heading__copy {
+    margin-top: 10px;
+    line-height: 1.5;
+  }
+
+  .modal-card--guide .modal-actions {
+    margin-top: 16px;
   }
 }

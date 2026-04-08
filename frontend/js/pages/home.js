@@ -3,6 +3,7 @@ import { createLevelCard } from '../components/levelCard.js';
 import { getState, hydrateGameSession, resetGameState, setState, syncLevels } from '../state/gameState.js';
 
 const HOME_GUIDE_STORAGE_KEY = 'where-is-waldo-home-guide-dismissed';
+const MOBILE_GUIDE_BREAKPOINT = '(max-width: 560px)';
 
 function buildPreviewSources(path) {
   const localUrl = new URL(path, window.location.href).toString();
@@ -60,32 +61,32 @@ function renderHomeShell(app) {
         <div class="modal-card modal-card--guide">
           <p class="section-heading__eyebrow">Field Briefing</p>
           <h2>How to spot everyone without losing the clock.</h2>
-          <p class="section-heading__copy">
+          <p class="section-heading__copy" data-guide-copy>
             Before you dive into the crowd, here is the quick survival guide for sharp-eyed detectives.
           </p>
           <div class="guide-steps">
-            <article class="guide-step">
+            <article class="guide-step" data-guide-step>
               <span class="guide-step__number">01</span>
               <div>
                 <h3>Pick a level and lock in</h3>
                 <p>Choose any scene from the home page. Your timer starts as soon as the round opens.</p>
               </div>
             </article>
-            <article class="guide-step">
+            <article class="guide-step" data-guide-step>
               <span class="guide-step__number">02</span>
               <div>
                 <h3>Tap the scene where you spotted someone</h3>
                 <p>A target marker appears exactly where you clicked so you can confirm the guess.</p>
               </div>
             </article>
-            <article class="guide-step">
+            <article class="guide-step" data-guide-step>
               <span class="guide-step__number">03</span>
               <div>
                 <h3>Choose the correct character</h3>
                 <p>Use the pop-up selector to name who you found. Correct picks stay marked on the map.</p>
               </div>
             </article>
-            <article class="guide-step">
+            <article class="guide-step" data-guide-step>
               <span class="guide-step__number">04</span>
               <div>
                 <h3>Zoom, scan, and finish clean</h3>
@@ -115,6 +116,22 @@ function dismissHomeGuide(guideModal) {
   guideModal.hidden = true;
 }
 
+function syncGuideContent(app) {
+  const guideCopy = app.querySelector('[data-guide-copy]');
+  const guideSteps = [...app.querySelectorAll('[data-guide-step]')];
+  const isMobileGuide = window.matchMedia(MOBILE_GUIDE_BREAKPOINT).matches;
+
+  if (guideCopy) {
+    guideCopy.textContent = isMobileGuide
+      ? 'Quick heads-up: pick a scene, tap where you found someone, then confirm the name before the timer runs out.'
+      : 'Before you dive into the crowd, here is the quick survival guide for sharp-eyed detectives.';
+  }
+
+  guideSteps.forEach((step, index) => {
+    step.hidden = isMobileGuide && index === guideSteps.length - 1;
+  });
+}
+
 export async function initHomePage() {
   // Entry point for the home screen.
   const app = document.getElementById('app');
@@ -125,10 +142,15 @@ export async function initHomePage() {
   const loadingOverlay = app.querySelector('[data-loading-overlay]');
   const guideModal = app.querySelector('[data-home-guide]');
   const guideDismissButton = app.querySelector('[data-guide-dismiss]');
+  const guideMediaQuery = window.matchMedia(MOBILE_GUIDE_BREAKPOINT);
 
+  syncGuideContent(app);
   guideModal.hidden = !shouldShowHomeGuide();
   guideDismissButton.addEventListener('click', () => {
     dismissHomeGuide(guideModal);
+  });
+  guideMediaQuery.addEventListener('change', () => {
+    syncGuideContent(app);
   });
 
   resetGameState();
